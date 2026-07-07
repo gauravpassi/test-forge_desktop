@@ -1,3 +1,21 @@
+const themeToggle = document.getElementById("themeToggle");
+const root = document.documentElement;
+
+function syncThemeToggle() {
+  const isDark = root.getAttribute("data-theme") === "dark";
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+}
+
+themeToggle.addEventListener("click", () => {
+  const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  root.setAttribute("data-theme", next);
+  try { localStorage.setItem("theme", next); } catch (e) {}
+  syncThemeToggle();
+});
+
+syncThemeToggle();
+
 const form = document.getElementById("contactForm");
 const toast = document.getElementById("toast");
 
