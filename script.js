@@ -1,4 +1,16 @@
+const navToggle = document.querySelector(".nav-toggle");
+const navLinks = document.getElementById("primary-nav");
+if (navToggle && navLinks) {
+  navToggle.addEventListener("click", () => {
+    const isOpen = navLinks.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+}
+
 const form = document.getElementById("contactForm");
+if (form) initContactForm();
+
+function initContactForm() {
 const toast = document.getElementById("toast");
 
 const rules = {
@@ -58,3 +70,4 @@ form.addEventListener("submit", (e) => {
     setTimeout(() => toast.classList.remove("show"), 4000);
   }, 900);
 });
+}
