@@ -19,6 +19,7 @@
             justify-content: center;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
+            padding: 2rem 1rem;
         }
 
         .container {
@@ -29,7 +30,8 @@
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 600px;
+            max-width: 720px;
+            width: 100%;
             animation: fadeIn 1s ease-in;
         }
 
@@ -44,12 +46,102 @@
             letter-spacing: 2px;
         }
 
-        p {
+        p.intro {
             font-size: 1.2rem;
             margin-bottom: 2rem;
             line-height: 1.6;
             opacity: 0.95;
         }
+
+        /* ---- Slider ---- */
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: #fff;
+            text-align: center;
+        }
+
+        .slide h2 {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .slide p {
+            font-size: 1.05rem;
+            max-width: 480px;
+            line-height: 1.5;
+            opacity: 0.95;
+        }
+
+        .slide:nth-child(1) { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); color: #4a2545; }
+        .slide:nth-child(2) { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #1e3a5f; }
+        .slide:nth-child(3) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: #10432a; }
+        .slide:nth-child(4) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: #4a2010; }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 2;
+        }
+        .slider-btn:hover { background: #fff; transform: translateY(-50%) scale(1.08); }
+        .slider-btn.prev { left: 12px; }
+        .slider-btn.next { right: 12px; }
+
+        .dots {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 2;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .dot.active { background: #fff; transform: scale(1.25); }
 
         .btn {
             display: inline-block;
@@ -66,13 +158,85 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
+
+        @media (max-width: 560px) {
+            h1 { font-size: 2.5rem; }
+            .slider { height: 260px; }
+            .slide h2 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome!</h1>
-        <p>We're glad to have you here. Explore, create, and enjoy your journey with us.</p>
+        <p class="intro">We're glad to have you here. Explore, create, and enjoy your journey with us.</p>
+
+        <div class="slider" id="slider">
+            <div class="slides" id="slides">
+                <div class="slide">
+                    <h2>Discover</h2>
+                    <p>Uncover new ideas and possibilities crafted with care, just for you.</p>
+                </div>
+                <div class="slide">
+                    <h2>Create</h2>
+                    <p>Turn your imagination into something real with tools built for makers.</p>
+                </div>
+                <div class="slide">
+                    <h2>Connect</h2>
+                    <p>Join a community that shares your passion and celebrates your progress.</p>
+                </div>
+                <div class="slide">
+                    <h2>Grow</h2>
+                    <p>Level up your skills, one small step at a time. We're with you all the way.</p>
+                </div>
+            </div>
+
+            <button class="slider-btn prev" id="prevBtn" aria-label="Previous slide">&#10094;</button>
+            <button class="slider-btn next" id="nextBtn" aria-label="Next slide">&#10095;</button>
+
+            <div class="dots" id="dots"></div>
+        </div>
+
         <a href="#" class="btn">Get Started</a>
     </div>
+
+    <script>
+        (function () {
+            const slidesEl = document.getElementById('slides');
+            const dotsEl = document.getElementById('dots');
+            const total = slidesEl.children.length;
+            let index = 0;
+            let timer;
+
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('button');
+                dot.className = 'dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+                dot.addEventListener('click', () => go(i));
+                dotsEl.appendChild(dot);
+            }
+
+            function render() {
+                slidesEl.style.transform = 'translateX(' + (-index * 100) + '%)';
+                [...dotsEl.children].forEach((d, i) => d.classList.toggle('active', i === index));
+            }
+
+            function go(i) {
+                index = (i + total) % total;
+                render();
+                restart();
+            }
+
+            function restart() {
+                clearInterval(timer);
+                timer = setInterval(() => go(index + 1), 5000);
+            }
+
+            document.getElementById('prevBtn').addEventListener('click', () => go(index - 1));
+            document.getElementById('nextBtn').addEventListener('click', () => go(index + 1));
+
+            restart();
+        })();
+    </script>
 </body>
 </html>
