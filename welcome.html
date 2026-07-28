@@ -51,6 +51,13 @@
             opacity: 0.95;
         }
 
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .btn {
             display: inline-block;
             padding: 12px 32px;
@@ -66,13 +73,27 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
+
+        .btn-outline {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome!</h1>
         <p>We're glad to have you here. Explore, create, and enjoy your journey with us.</p>
-        <a href="#" class="btn">Get Started</a>
+        <div class="btn-group">
+            <a href="#" class="btn">Get Started</a>
+            <a href="contact.html" class="btn btn-outline">Contact Us</a>
+        </div>
     </div>
 </body>
 </html>
